@@ -9,7 +9,7 @@ This is a Tag Template for Server Side Google Tag Manager. It can be used to sen
 ## Usage and Configuration Options
 Typically, this tag is triggered by events coming from **JSON Client** (which receives the JSON payload sent from **JSON Tag** in client-side GTM). The **JSON Server Tag** takes data from Event Data, builds a request payload, and forwards it to any HTTP endpoint.
 
-For details on how JSON Client monitoring and tag responses work, see the JSON Client README in `json-client/README.md`.
+For details on how JSON Client monitoring and tag responses work, see the [JSON Client README](https://github.com/floriangoetting/json-client).
 
 ### Request Settings
 #### HTTP Endpoint
