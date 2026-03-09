@@ -3,9 +3,7 @@ const getTimestampMillis = require('getTimestampMillis');
 const JSON = require('JSON');
 const Object = require('Object');
 const logToConsole = require('logToConsole');
-const makeInteger = require('makeInteger');
 const makeTableMap = require('makeTableMap');
-const parseUrl = require('parseUrl');
 const sendHttpRequest = require('sendHttpRequest');
 const toBase64 = require('toBase64');
 const sendMessage = require('sendMessage');
@@ -17,6 +15,7 @@ const timestamp = getTimestampMillis();
 const eventData = getAllEventData();
 const newEventProperties = data.newEventProperties && data.newEventProperties.length ? makeTableMap(data.newEventProperties, 'key', 'value') : {};
 const customRequestHeaders = data.customRequestHeaders && data.customRequestHeaders.length ? makeTableMap(data.customRequestHeaders, 'key', 'value') : {};
+const requestMethod = (data.requestMethod || 'POST').toUpperCase();
 
 const log = msg => {
   logToConsole(LOG_PREFIX + msg);
@@ -33,15 +32,23 @@ const mergeObj = (fromObj, toObj) => {
 
 const getHeaders = () => {
   const headers = {};
-  if (data.standardRequestHeaders && data.standardRequestHeaders.length) {
-    data.standardRequestHeaders.forEach(p => {
-      if(p.key === 'Authorization'){
-        headers.Authorization = 'Basic ' + toBase64(p.value);
-      } else {
-        headers[p.key] = p.value;
-      }
-    });
+  if (requestMethod === 'POST') {
+    headers['Content-Type'] = data.contentType || 'application/json';
   }
+  
+  if (data.addAcceptHeader) {
+    if (data.acceptAllHeaders) {
+      headers['Accept'] = '*/*';
+    } else if (data.acceptHeaders && data.acceptHeaders.length) {
+      const acceptHeadersString = data.acceptHeaders.map(h => h.acceptHeader).join(', ');
+      headers['Accept'] = acceptHeadersString;
+    }
+  }
+
+  if (data.addBasicAuthHeader && data.basicAuthUsername && data.basicAuthPassword) {
+    headers['Authorization'] = 'Basic ' + toBase64(data.basicAuthUsername + ':' + data.basicAuthPassword);
+  }
+  
   return mergeObj(customRequestHeaders, headers);
 };
 
@@ -148,8 +155,6 @@ const safeParseJSON = (body) => {
   // otherwise simply return the text
   return body;
 };
-
-const requestMethod = (data.requestMethod || 'POST').toUpperCase();
 
 let requestUrl = HTTP_ENDPOINT;
 let requestOptions = {

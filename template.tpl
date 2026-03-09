@@ -67,68 +67,195 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "SIMPLE_TABLE",
-        "name": "standardRequestHeaders",
+        "type": "GROUP",
+        "name": "standardRequestHeadersGroup",
         "displayName": "Standard Request Headers",
-        "simpleTableColumns": [
+        "groupStyle": "ZIPPY_OPEN",
+        "subParams": [
           {
-            "defaultValue": "",
-            "displayName": "Request Header Key",
-            "name": "key",
             "type": "SELECT",
+            "name": "contentType",
+            "displayName": "Content Type",
+            "macrosInSelect": false,
             "selectItems": [
               {
-                "value": "content-type",
-                "displayValue": "content-type"
+                "value": "application/json",
+                "displayValue": "application/json"
               },
               {
-                "value": "Authorization",
-                "displayValue": "Authorization"
+                "value": "application/x-www-form-urlencoded",
+                "displayValue": "application/x-www-form-urlencoded"
               },
               {
-                "value": "",
-                "displayValue": "accept"
+                "value": "application/xml",
+                "displayValue": "application/xml"
+              },
+              {
+                "value": "text/plain",
+                "displayValue": "text/plain"
+              }
+            ],
+            "simpleValueType": true,
+            "defaultValue": "application/json",
+            "enablingConditions": [
+              {
+                "paramName": "requestMethod",
+                "paramValue": "post",
+                "type": "EQUALS"
+              }
+            ],
+            "help": "The Content-Type header is used to define the format of the data of the request. Usually application/json should be used here."
+          },
+          {
+            "type": "CHECKBOX",
+            "name": "addAcceptHeader",
+            "checkboxText": "Add Accept Header",
+            "simpleValueType": true,
+            "help": "The Accept Header indicates which content types are accepted and understood from the response. After activating this option you can select one or multiple formats which should be accepted."
+          },
+          {
+            "type": "CHECKBOX",
+            "name": "acceptAllHeaders",
+            "checkboxText": "Accept all Headers",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "addAcceptHeader",
+                "paramValue": true,
+                "type": "EQUALS"
               }
             ]
           },
           {
-            "defaultValue": "",
-            "displayName": "Request Header Value",
-            "name": "value",
-            "type": "TEXT"
+            "type": "SIMPLE_TABLE",
+            "name": "acceptHeaders",
+            "simpleTableColumns": [
+              {
+                "defaultValue": "",
+                "displayName": "Specific Accept Header",
+                "name": "acceptHeader",
+                "type": "SELECT",
+                "selectItems": [
+                  {
+                    "value": "application/json",
+                    "displayValue": "application/json"
+                  },
+                  {
+                    "value": "application/xml",
+                    "displayValue": "application/xml"
+                  },
+                  {
+                    "value": "text/xml",
+                    "displayValue": "text/xml"
+                  },
+                  {
+                    "value": "text/html",
+                    "displayValue": "text/html"
+                  },
+                  {
+                    "value": "text/plain",
+                    "displayValue": "text/plain"
+                  },
+                  {
+                    "value": "*/*",
+                    "displayValue": "*/*"
+                  }
+                ]
+              }
+            ],
+            "enablingConditions": [
+              {
+                "paramName": "acceptAllHeaders",
+                "paramValue": false,
+                "type": "EQUALS"
+              }
+            ]
+          },
+          {
+            "type": "CHECKBOX",
+            "name": "addBasicAuthHeader",
+            "checkboxText": "Add Basic Authentication Header",
+            "simpleValueType": true,
+            "help": "This option allows you to add a basic authentication header. You can add the raw username and password here and it will be automatically converted to base64."
+          },
+          {
+            "type": "GROUP",
+            "name": "basicAuthHeader",
+            "displayName": "Basic Authentication Header",
+            "groupStyle": "ZIPPY_OPEN",
+            "subParams": [
+              {
+                "type": "TEXT",
+                "name": "basicAuthUsername",
+                "displayName": "Username",
+                "simpleValueType": true,
+                "help": "The Username in clear text to be used in the Basic Authentication.",
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ]
+              },
+              {
+                "type": "TEXT",
+                "name": "basicAuthPassword",
+                "displayName": "Password",
+                "simpleValueType": true,
+                "help": "The Password in clear text to be used in the Basic Authentication. It will be base64 encoded together with the Username by the template.",
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ]
+              }
+            ],
+            "enablingConditions": [
+              {
+                "paramName": "addBasicAuthHeader",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ]
           }
-        ],
-        "help": "You can pick from a list of standard request headers here. If you want to add more custom request headers please check the next section."
+        ]
       },
       {
-        "type": "SIMPLE_TABLE",
-        "name": "customRequestHeaders",
+        "type": "GROUP",
+        "name": "customRequestHeadersGroup",
         "displayName": "Custom Request Headers",
-        "simpleTableColumns": [
+        "groupStyle": "ZIPPY_OPEN",
+        "subParams": [
           {
-            "defaultValue": "",
-            "displayName": "Request Header Key",
-            "name": "key",
-            "type": "TEXT",
-            "selectItems": [
+            "type": "SIMPLE_TABLE",
+            "name": "customRequestHeaders",
+            "displayName": "Custom Request Headers",
+            "simpleTableColumns": [
               {
-                "value": "content-type",
-                "displayValue": "content-type"
+                "defaultValue": "",
+                "displayName": "Request Header Key",
+                "name": "key",
+                "type": "TEXT",
+                "selectItems": [
+                  {
+                    "value": "content-type",
+                    "displayValue": "content-type"
+                  },
+                  {
+                    "value": "Authorization",
+                    "displayValue": "Authorization"
+                  }
+                ]
               },
               {
-                "value": "Authorization",
-                "displayValue": "Authorization"
+                "defaultValue": "",
+                "displayName": "Request Header Value",
+                "name": "value",
+                "type": "TEXT"
               }
-            ]
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Request Header Value",
-            "name": "value",
-            "type": "TEXT"
+            ],
+            "help": "If you need more than the standard request headers you can define your own custom request headers in this section."
           }
-        ],
-        "help": "If you need more than the standard request headers you can define your own custom request headers in this section."
+        ]
       }
     ]
   },
@@ -399,9 +526,7 @@ const getTimestampMillis = require('getTimestampMillis');
 const JSON = require('JSON');
 const Object = require('Object');
 const logToConsole = require('logToConsole');
-const makeInteger = require('makeInteger');
 const makeTableMap = require('makeTableMap');
-const parseUrl = require('parseUrl');
 const sendHttpRequest = require('sendHttpRequest');
 const toBase64 = require('toBase64');
 const sendMessage = require('sendMessage');
@@ -413,6 +538,7 @@ const timestamp = getTimestampMillis();
 const eventData = getAllEventData();
 const newEventProperties = data.newEventProperties && data.newEventProperties.length ? makeTableMap(data.newEventProperties, 'key', 'value') : {};
 const customRequestHeaders = data.customRequestHeaders && data.customRequestHeaders.length ? makeTableMap(data.customRequestHeaders, 'key', 'value') : {};
+const requestMethod = (data.requestMethod || 'POST').toUpperCase();
 
 const log = msg => {
   logToConsole(LOG_PREFIX + msg);
@@ -429,15 +555,23 @@ const mergeObj = (fromObj, toObj) => {
 
 const getHeaders = () => {
   const headers = {};
-  if (data.standardRequestHeaders && data.standardRequestHeaders.length) {
-    data.standardRequestHeaders.forEach(p => {
-      if(p.key === 'Authorization'){
-        headers.Authorization = 'Basic ' + toBase64(p.value);
-      } else {
-        headers[p.key] = p.value;
-      }
-    });
+  if (requestMethod === 'POST') {
+    headers['Content-Type'] = data.contentType || 'application/json';
   }
+  
+  if (data.addAcceptHeader) {
+    if (data.acceptAllHeaders) {
+      headers['Accept'] = '*/*';
+    } else if (data.acceptHeaders && data.acceptHeaders.length) {
+      const acceptHeadersString = data.acceptHeaders.map(h => h.acceptHeader).join(', ');
+      headers['Accept'] = acceptHeadersString;
+    }
+  }
+
+  if (data.addBasicAuthHeader && data.basicAuthUsername && data.basicAuthPassword) {
+    headers['Authorization'] = 'Basic ' + toBase64(data.basicAuthUsername + ':' + data.basicAuthPassword);
+  }
+  
   return mergeObj(customRequestHeaders, headers);
 };
 
@@ -544,8 +678,6 @@ const safeParseJSON = (body) => {
   // otherwise simply return the text
   return body;
 };
-
-const requestMethod = (data.requestMethod || 'POST').toUpperCase();
 
 let requestUrl = HTTP_ENDPOINT;
 let requestOptions = {

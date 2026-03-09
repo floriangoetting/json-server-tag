@@ -24,16 +24,28 @@ Supported methods:
 
 ### Header Settings
 #### Standard Request Headers
-You can pick from a list of standard request headers here. If you want to add more custom request headers please check the next section.
+This section contains commonly used headers that can be configured without using custom key/value pairs.
 
-Notes:
-- If you select **Authorization** here, the template will send `Authorization: Basic <base64(value)>` (use this for Basic Auth credentials like `username:password`).
-- Custom headers (next section) override standard headers if the same header key is used.
+##### Content Type (POST only)
+Select the Content-Type that is sent with POST requests.
+
+Default: `application/json`
+
+##### Accept Header
+- **Add Accept Header**: Enables sending an `Accept` header.
+- **Accept all Headers**: Sends `Accept: */*`.
+- **Specific Accept Header(s)**: If "Accept all Headers" is disabled, you can add one or multiple accepted formats. They will be sent as a comma-separated list.
+
+##### Basic Authentication Header
+- **Add Basic Authentication Header**: Sends `Authorization: Basic <base64(username:password)>`.
+- **Username** / **Password**: Enter raw credentials; the template will base64-encode `username:password` automatically.
 
 #### Custom Request Headers
-If you need more than the standard request headers you can define your own custom request headers in this section.
+Use this table to add any additional headers you need (e.g. bearer tokens, custom API keys, etc.).
 
-Tip: Use this for `Authorization: Bearer ...` (or any other non-Basic scheme), because custom headers are not automatically base64-encoded.
+Notes:
+- Custom headers override standard headers when the same header key is used.
+- If you want to override the standard POST `Content-Type`, use the header key `Content-Type` (same casing).
 
 ### Event Data Settings
 #### Add all Event Data
@@ -109,4 +121,3 @@ This template requires:
 - Read Event Data (`any`)
 - Send HTTP requests (`any`)
 - Use messages (`any`) for monitoring and responses
-
