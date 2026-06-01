@@ -4,7 +4,7 @@
 
 This is a Tag Template for Server Side Google Tag Manager. It can be used to send data to any HTTP Endpoint using POST or GET. The event data can be mapped and additional properties or headers can be added to the event data as well. It complements JSON Client and JSON Tag.
 
-![Community Template Gallery Status](https://img.shields.io/badge/Community%20Template%20Gallery%20Status-pending-orange)
+![Community Template Gallery Status](https://img.shields.io/badge/Community%20Template%20Gallery%20Status-published-brightgreen)
 
 ## Usage and Configuration Options
 Typically, this tag is triggered by events coming from **JSON Client** (which receives the JSON payload sent from **JSON Tag** in client-side GTM). The **JSON Server Tag** takes data from Event Data, builds a request payload, and forwards it to any HTTP endpoint.
