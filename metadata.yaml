@@ -1,5 +1,7 @@
 homepage: "https://www.floriangoetting.de"
 documentation: "https://github.com/floriangoetting/json-server-tag"
 versions:
+  - sha: 011518eebfabda440ccaf3d9fa13788f44f7e799
+    changeNotes: Adds optional support for interpreting dots in added event property keys as nested object paths.
   - sha: 385add3c70e8f542615d62e0e162d16e80e5073f
     changeNotes: Initial release.
