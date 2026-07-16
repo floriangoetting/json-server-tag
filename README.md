@@ -61,6 +61,19 @@ Map keys in the Event Data object to event properties you want to send to the HT
 #### Add Event Properties
 Use this table to add completely new event properties to the hit sent to the HTTP Endpoint. Each property needs a key and a value.
 
+Enable **Interpret dots in added Event Property Keys as nested paths** to treat dots in these keys as object paths. For example, adding `tealium.trace_id` to an existing `tealium` object produces:
+
+```json
+{
+  "tealium": {
+    "audiences": [],
+    "trace_id": "the configured value"
+  }
+}
+```
+
+The option is disabled by default. When disabled, `tealium.trace_id` remains a literal property key as in previous versions.
+
 ### Payload Settings
 #### Send Timestamp with Request
 If this option is activated a timestamp in milliseconds is sent with the payload to the defined HTTP Endpoint.

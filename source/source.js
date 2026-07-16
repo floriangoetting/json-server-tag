@@ -1,5 +1,6 @@
 const getAllEventData = require('getAllEventData');
 const getTimestampMillis = require('getTimestampMillis');
+const getType = require('getType');
 const JSON = require('JSON');
 const Object = require('Object');
 const logToConsole = require('logToConsole');
@@ -30,6 +31,33 @@ const mergeObj = (fromObj, toObj) => {
   return toObj;
 };
 
+const mergeNestedEventProperties = (fromObj, toObj) => {
+  Object.keys(fromObj).forEach(key => {
+    if (key.indexOf('.') === -1) {
+      toObj[key] = fromObj[key];
+      return;
+    }
+
+    const path = key.split('.');
+    const property = path.pop();
+    const target = path.reduce((obj, part) => {
+      if (getType(obj[part]) !== 'object') {
+        obj[part] = {};
+      }
+      return obj[part];
+    }, toObj);
+
+    target[property] = fromObj[key];
+  });
+  return toObj;
+};
+
+const mergeNewEventProperties = (fromObj, toObj) => {
+  return data.enableNestedEventPropertyKeys
+    ? mergeNestedEventProperties(fromObj, toObj)
+    : mergeObj(fromObj, toObj);
+};
+
 const getHeaders = () => {
   const headers = {};
   if (requestMethod === 'POST') {
@@ -55,7 +83,7 @@ const getHeaders = () => {
 const getEventProps = () => {
   // add all event data if checkbox is enabled
   if (data.addAllEventData) {
-    return mergeObj(newEventProperties, eventData);
+    return mergeNewEventProperties(newEventProperties, eventData);
   }
   // map event properties if applicable
   const props = {};
@@ -64,7 +92,7 @@ const getEventProps = () => {
       if (eventData[p.key]) props[(p.mapKey || p.key)] = eventData[p.key];
     });
   }
-  return mergeObj(newEventProperties, props);
+  return mergeNewEventProperties(newEventProperties, props);
 };
 
 if (!HTTP_ENDPOINT) {
