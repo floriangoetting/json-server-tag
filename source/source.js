@@ -173,11 +173,16 @@ const sendJSONClientMonitorEvent = (status, responseBody) => {
 
 const safeParseJSON = (body) => {
   if (typeof body === 'undefined' || body === null || body === '') return 'empty';
-  
+
+  // trim whitespace, e.g. trailing newlines of pretty-printed JSON responses
+  const trimmedBody = body.trim();
+
   // Primitive heuristics: check whether string begins with { or [ → then JSON
-  if ((body.charAt(0) === '{' && body.charAt(body.length - 1) === '}') ||
-      (body.charAt(0) === '[' && body.charAt(body.length - 1) === ']')) {
-    return JSON.parse(body);
+  if ((trimmedBody.charAt(0) === '{' && trimmedBody.charAt(trimmedBody.length - 1) === '}') ||
+      (trimmedBody.charAt(0) === '[' && trimmedBody.charAt(trimmedBody.length - 1) === ']')) {
+    const parsedBody = JSON.parse(trimmedBody);
+    // JSON.parse returns undefined for invalid JSON in sandboxed JS
+    if (typeof parsedBody !== 'undefined') return parsedBody;
   }
 
   // otherwise simply return the text
